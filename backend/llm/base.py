@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-class LLM(ABC):
+
+class BaseLLM(ABC):
     @abstractmethod
-    def generate(self, text: str) -> str:
+    def generate(self, prompt: str) -> str:
         pass

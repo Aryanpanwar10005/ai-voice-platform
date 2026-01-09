@@ -1,8 +1,13 @@
 import whisper
-from pathlib import Path
 
-model = whisper.load_model("base")
 
-def speech_to_text(audio_path: Path) -> str:
-    result = model.transcribe(str(audio_path))
-    return result["text"]
+# Load model ONCE (important for performance)
+_model = whisper.load_model("base")
+
+
+def transcribe_audio(audio_path: str) -> str:
+    """
+    Transcribe a WAV audio file to text using Whisper.
+    """
+    result = _model.transcribe(audio_path)
+    return result.get("text", "").strip()

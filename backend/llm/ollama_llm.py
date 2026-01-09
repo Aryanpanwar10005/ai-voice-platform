@@ -1,28 +1,34 @@
-import subprocess
-from backend.llm.base import LLM
+import requests
+from .base import BaseLLM
 
-class OllamaLLM(LLM):
-    def __init__(self, model: str = "llama3"):
+
+class OllamaLLM(BaseLLM):
+    def __init__(
+        self,
+        model: str = "llama3",
+        base_url: str = "http://localhost:11434",
+        timeout: int = 120,
+    ):
         self.model = model
+        self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
 
-    def generate(self, text: str) -> str:
-        command = [
-            "ollama",
-            "run",
-            self.model,
-            text
-        ]
+    def generate(self, prompt: str) -> str:
+        url = f"{self.base_url}/api/generate"
 
-        result = subprocess.run(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            encoding="utf-8",   # ✅ FORCE UTF-8
-            errors="ignore"     # ✅ IGNORE INVALID BYTES
+        payload = {
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False,
+        }
+
+        response = requests.post(
+            url,
+            json=payload,
+            timeout=self.timeout,
         )
 
-        if result.returncode != 0:
-            raise RuntimeError(result.stderr)
+        response.raise_for_status()
 
-        return result.stdout.strip()
+        data = response.json()
+        return data.get("response", "").strip()

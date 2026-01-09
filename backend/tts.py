@@ -1,53 +1,34 @@
 import subprocess
-import uuid
-from pathlib import Path
-import sys
-import re
+import os
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-VOICE_PATH = BASE_DIR / "models" / "tts" / "en_US-lessac-medium.onnx"
-OUTPUT_DIR = BASE_DIR / "outputs"
-OUTPUT_DIR.mkdir(exist_ok=True)
+PIPER_EXECUTABLE = "piper"
 
-def clean_text(text: str) -> str:
-    """
-    Remove emojis and unsupported unicode characters
-    that break Windows TTS subprocess.
-    """
-    # Remove emojis & non-ASCII characters
-    text = text.encode("ascii", errors="ignore").decode()
-    # Remove extra whitespace
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+VOICE_MODEL = r"C:\Users\aryan\Documents\ai-voice-platform\models\tts\en_US-lessac-medium.onnx"
+VOICE_CONFIG = r"C:\Users\aryan\Documents\ai-voice-platform\models\tts\en_US-lessac-medium.onnx.json"
 
-def text_to_speech(text: str) -> Path:
-    output_file = OUTPUT_DIR / f"{uuid.uuid4()}.wav"
 
-    safe_text = clean_text(text)
+def synthesize_speech(text: str, output_path: str) -> None:
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     command = [
-        sys.executable,
-        "-m",
-        "piper",
-        "--model",
-        str(VOICE_PATH),
-        "--output_file",
-        str(output_file),
+        PIPER_EXECUTABLE,
+        "--model", VOICE_MODEL,
+        "--config", VOICE_CONFIG,
+        "--output_file", output_path,
     ]
 
-    process = subprocess.run(
+    process = subprocess.Popen(
         command,
-        input=safe_text,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        encoding="utf-8",
-        errors="ignore",
-        capture_output=True,
     )
 
+    stdout, stderr = process.communicate(text)
+
     if process.returncode != 0:
-        raise RuntimeError(f"Piper error: {process.stderr}")
+        raise RuntimeError(f"Piper failed:\n{stderr}")
 
-    if not output_file.exists():
-        raise RuntimeError("TTS failed: output file not created")
-
-    return output_file
+    if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
+        raise RuntimeError("Piper produced empty audio")

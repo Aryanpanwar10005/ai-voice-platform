@@ -1,13 +1,18 @@
 # Virtual environment
 venv/
 
+# Environment variables
+.env
+
+# Runtime audio
+outputs/
+audio_responses/
+*.wav
+
+# Models (keep folders, ignore files)
+models/**/*.onnx
+models/**/*.json
+
 # Python cache
 __pycache__/
 *.pyc
-
-# Generated audio files
-outputs/
-
-# OS files
-.DS_Store
-Thumbs.db
