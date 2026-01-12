@@ -1,199 +1,230 @@
-# Local AI Voice Platform
+# VoxAI – AI Voice Platform
 
-A fully local, offline AI voice assistant powered by Ollama. No cloud APIs, no internet dependency, complete privacy.
-
-## Overview
-
-This project implements a complete voice interaction pipeline that runs entirely on your machine. Speak into your microphone, get AI-generated responses, and hear them played back—all without sending data to external servers.
-
-**Current Status:** Functional on Windows 10/11. Audio pipeline tested and working.
+A local-first AI voice platform for text-to-speech, speech-to-text, and voice-based AI interactions. All processing runs locally using open-source models to ensure privacy and low latency.
 
 ## Features
 
-- **Fully Local & Offline** - No cloud APIs, no telemetry, no data leaves your machine
-- **Voice Input** - Real-time speech recognition via Whisper
-- **LLM Reasoning** - Powered by Ollama (supports any model: llama3, phi3, mistral, etc.)
-- **Voice Output** - Natural text-to-speech via Piper TTS
-- **Simple UI** - Gradio-based web interface for voice interaction
-- **API-First Design** - FastAPI backend ready for automation tools (n8n, etc.)
-- **Privacy-Focused** - All processing happens on your hardware
+- **Text-to-Speech (TTS)** – Convert text into natural-sounding speech with adjustable speed, pitch, and stability
+- **Speech-to-Text (STT)** – Transcribe audio from recordings or file uploads using Whisper
+- **Voice Chat** – Have AI conversations using your voice (STT → LLM → TTS pipeline)
+- **Audio History** – Session-based history (Phase 2) with play, download, and management features
+- **Waveform Visualization** – Visual representation of generated audio
+- **Edit Mode (Planned)** – Non-destructive audio trimming and regeneration
 
-## Architecture
+## Status
+
+**Phase 1:** Complete – Core backend functionality (TTS, STT, Voice Chat)  
+**Phase 2:** In Progress – Professional UI implementation  
+**Phase 3:** Planned – User authentication, database persistence, cloud deployment
+
+## Technology Stack
+
+### Frontend
+- React 18 with TypeScript
+- Vite build tool
+- Tailwind CSS
+- Native browser APIs (MediaRecorder, HTMLAudioElement)
+
+### Backend
+- FastAPI (Python)
+- Piper TTS (local text-to-speech)
+- Whisper (base model, local speech-to-text)
+- Ollama with Llama3 (local language model)
+- File-based storage
+
+### Infrastructure
+- Local development environment
+- Docker containerization (in progress)
+- Oracle Cloud deployment (planned)
+
+## Project Structure
+
 ```
-User speaks → Whisper STT → Ollama LLM → Piper TTS → Audio playback
-                ↓              ↓            ↓
-            (audio.wav)   (text response) (output.wav)
+ai-voice-platform/
+├── backend/           # FastAPI application
+│   ├── main.py       # API endpoints
+│   ├── tts.py        # Piper TTS integration
+│   ├── stt.py        # Whisper STT integration
+│   └── llm/          # Ollama LLM integration
+├── frontend/          # React application (in progress)
+├── models/           # Local AI model files
+│   └── tts/         # Piper voice models
+├── outputs/          # Generated audio files
+├── docs/
+│   ├── PRD.md       # Product Requirements Document
+│   └── TRD.md       # Technical Requirements Document
+├── requirements.txt  # Python dependencies
+└── README.md
 ```
 
-**Technology Stack:**
-- Speech-to-Text: OpenAI Whisper
-- LLM: Ollama (local inference)
-- Text-to-Speech: Piper TTS
-- Backend: FastAPI
-- UI: Gradio
+## Local Setup
 
-## Requirements
+### Prerequisites
 
-### System Requirements
-- **OS:** Windows 10/11 (tested), Linux/macOS (should work, untested)
-- **RAM:** 8GB minimum, 16GB recommended
-- **Storage:** 5-10GB for models
-- **CPU/GPU:** GPU recommended for faster inference (Ollama supports CUDA/ROCm)
-
-### Software Dependencies
 - Python 3.10+
-- [Ollama](https://ollama.ai) (must be installed separately)
-- FFmpeg (for audio processing)
+- Node.js 18+ (for frontend)
+- Piper TTS (https://github.com/rhasspy/piper)
+- Ollama running locally (for voice chat)
 
-## Installation & Setup
+### Backend Setup
 
-### 1. Install Ollama
-
-Download and install Ollama from [https://ollama.ai](https://ollama.ai)
-
-After installation, pull a model (recommended for testing):
-```bash
-ollama pull phi3:mini
-```
-
-For better responses (requires more RAM):
-```bash
-ollama pull llama3
-```
-
-### 2. Install FFmpeg
-
-**Windows:**
-- Download from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
-- Extract and add to PATH, or use: `choco install ffmpeg` (if you have Chocolatey)
-
-**Linux:**
-```bash
-sudo apt install ffmpeg
-```
-
-### 3. Clone Repository
+1. Clone the repository:
 ```bash
 git clone https://github.com/Aryanpanwar10005/ai-voice-platform.git
 cd ai-voice-platform
 ```
 
-### 4. Install Python Dependencies
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Download Piper TTS Voice Model
-
-Piper voices are **not included** in this repository. You must download them separately.
-
-1. Go to [Piper Voices Repository](https://github.com/rhasspy/piper/releases)
-2. Download a voice model (`.onnx` file) and its config (`.onnx.json` file)
-   - Recommended: `en_US-lessac-medium.onnx` (clear, natural voice)
-3. Place both files in `models/tts/` directory:
-```
-   models/tts/
-   ├── en_US-lessac-medium.onnx
-   └── en_US-lessac-medium.onnx.json
-```
-
-### 6. Configure Model Paths
-
-Edit `backend/config.py` and update:
-```python
-PIPER_MODEL = "models/tts/en_US-lessac-medium.onnx"  # Your voice model path
-OLLAMA_MODEL = "phi3:mini"  # The Ollama model you pulled
-```
-
-## Running the Application
-
-### Option 1: Run UI (Recommended for Testing)
+4. Download Piper TTS models:
 ```bash
-python backend/ui/app.py
+# Place models in models/tts/ directory
+# Required: en_US-lessac-medium.onnx and config file
 ```
 
-This starts a Gradio interface at `http://127.0.0.1:7860`
-
-### Option 2: Run Backend API
+5. Start the backend server:
 ```bash
-uvicorn backend.main:app --reload
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-API will be available at `http://127.0.0.1:8000`
+The API will be available at `http://127.0.0.1:8000`
 
-API Documentation: `http://127.0.0.1:8000/docs`
+### Frontend Setup (Phase 2)
 
-### Using the UI
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-1. Open the Gradio interface in your browser
-2. Click the microphone icon and speak
-3. Wait for transcription → LLM response → audio playback
-4. Response audio plays automatically in the browser
+The UI will be available at `http://localhost:5173`
 
-## Notes & Limitations
+### Verify Installation
 
-### Performance
-- **Speech-to-Text:** 2-5 seconds (depends on audio length and hardware)
-- **LLM Response:** 5-30 seconds (depends on model size and prompt complexity)
-- **Text-to-Speech:** 1-3 seconds
+Open `http://127.0.0.1:8000/` in your browser. You should see:
+```json
+{"status": "online", "message": "AI Voice Platform API is running"}
+```
 
-Local inference is **slower** than cloud APIs. This is expected. GPU acceleration helps significantly.
+## API Endpoints
 
-### Known Issues
-- First request is slow (model loading)
-- Large Ollama models (70B+) may require 32GB+ RAM
-- Whisper model downloads automatically on first run (~1.5GB for `base` model)
+- `GET /` – Health check
+- `POST /tts` – Text-to-speech generation
+- `POST /stt` – Speech-to-text transcription
+- `POST /voice-chat` – Combined voice interaction
+- `GET /audio/{filename}` – Retrieve generated audio files
 
-### Privacy Note
-All audio and text data stays on your machine. No analytics, no logging to external services.
+Full API documentation: See `docs/TRD.md`
+
+## Documentation
+
+- **[Product Requirements Document (PRD)](docs/PRD.md)** – Product vision, features, design system, success metrics
+- **[Technical Requirements Document (TRD)](docs/TRD.md)** – Architecture, API specifications, deployment strategy
 
 ## Roadmap
 
-- [ ] Add voice activity detection (VAD) for better mic control
-- [ ] Support for conversation history/context
-- [ ] Model selection in UI (switch Ollama models dynamically)
-- [ ] Add wake word detection
-- [ ] Docker containerization for easier deployment
-- [ ] Linux/macOS testing and documentation
+### Phase 1 (Complete)
+- Core TTS functionality using Piper
+- Core STT functionality using Whisper
+- Voice chat pipeline (STT → Ollama → TTS)
+- REST API with FastAPI
+- Local file-based storage
 
-## File Structure
-```
-ai-voice-platform/
-├── backend/
-│   ├── main.py              # FastAPI backend
-│   ├── stt.py               # Whisper speech-to-text
-│   ├── tts.py               # Piper text-to-speech
-│   ├── config.py            # Configuration settings
-│   ├── llm/
-│   │   ├── base.py          # LLM interface
-│   │   └── ollama_llm.py    # Ollama implementation
-│   └── ui/
-│       └── app.py           # Gradio UI
-├── models/
-│   └── tts/                 # Piper voice models (not in repo)
-├── outputs/                 # Runtime audio files (gitignored)
-├── requirements.txt
-├── README.md
-├── .gitignore
-└── LICENSE
-```
+### Phase 2 (In Progress)
+- Professional React-based UI
+- Audio waveform visualization
+- Session-based history panel
+- Parameter controls (speed, pitch, stability)
+- Responsive design
 
-## License
+### Phase 3 (Planned)
+- User authentication
+- Database persistence (PostgreSQL)
+- Edit mode with audio trimming
+- Usage credits system
+- Oracle Cloud deployment
 
-MIT License - See LICENSE file for details
+### Phase 4 (Future)
+- Voice cloning
+- Batch processing
+- Multiple language support
+- Developer API
+- Real-time collaboration
+
+## Project Philosophy
+
+### Local-First
+All AI processing runs on your local machine. No data is sent to external APIs or cloud services during normal operation.
+
+### Privacy-Focused
+- No user tracking
+- No telemetry
+- Audio files stored locally
+- Open-source models
+- Self-hostable
+
+### Not a SaaS Product
+This project is not a hosted SaaS product. VoxAI is designed to be self-hosted and run entirely on your own machine.
+
+### Open-Source
+Built with open-source tools and models. Contributions welcome.
+
+## Performance
+
+- **TTS Generation:** ~2-3 seconds for 500 characters
+- **STT Transcription:** ~5-10 seconds for 60 seconds of audio
+- **Voice Chat Round-trip:** ~15-20 seconds
+- **Audio Format:** WAV, 22.05kHz, 16-bit mono
+
+## Hardware Requirements
+
+### Minimum
+- 4GB RAM
+- Dual-core CPU
+- 2GB free disk space
+
+### Recommended
+- 8GB RAM
+- Quad-core CPU
+- 5GB free disk space
+- GPU (optional, for faster Whisper transcription)
+
+## Known Limitations
+
+- Single-user, single-session (no concurrency in Phase 1-2)
+- Session-based history (lost on browser reload in Phase 2)
+- English language only (current models)
+- No mobile app (web-based only)
 
 ## Contributing
 
-This is a personal project, but contributions are welcome. Please open an issue before submitting major changes.
+Contributions are welcome. Please read the documentation before submitting pull requests:
+1. Review `docs/PRD.md` for product direction
+2. Review `docs/TRD.md` for technical architecture
+3. Follow existing code style
+4. Test locally before submitting
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Author
+
+Aryan Panwar  
+GitHub: [@Aryanpanwar10005](https://github.com/Aryanpanwar10005)
 
 ## Acknowledgments
 
-- [Ollama](https://ollama.ai) - Local LLM inference
-- [OpenAI Whisper](https://github.com/openai/whisper) - Speech recognition
-- [Piper TTS](https://github.com/rhasspy/piper) - Text-to-speech synthesis
-- [FastAPI](https://fastapi.tiangolo.com/) - Backend framework
-- [Gradio](https://gradio.app/) - UI framework
-
----
-
-**Questions?** Open an issue on GitHub: https://github.com/Aryanpanwar10005/ai-voice-platform
+- [Piper TTS](https://github.com/rhasspy/piper) – High-quality text-to-speech
+- [Whisper](https://github.com/openai/whisper) – Robust speech recognition
+- [Ollama](https://ollama.ai/) – Local LLM inference
+- [FastAPI](https://fastapi.tiangolo.com/) – Modern Python web framework
