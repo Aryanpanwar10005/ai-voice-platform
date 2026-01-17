@@ -501,3 +501,22 @@ scratchpad/
 *_alpha_internal*
 *_beta_internal*
 
+
+# ============================================
+# VOICE MODEL FILES (TOO LARGE FOR GIT)
+# ============================================
+
+# Voice model binaries (~300-500 MB total)
+# Keep locally for testing, download via script for contributors
+voice_assets/**/*.onnx
+voice_assets/**/*.onnx.json
+backend/voices/*.onnx
+backend/voices/*.onnx.json
+backend/models/*.onnx
+
+# BUT keep these important files:
+!voice_assets/LICENSES.md
+!voice_assets/voices.manifest.json
+!voice_assets/*/LICENSES.md
+!voice_assets/*/voices.manifest.json
+
