@@ -1,53 +1,291 @@
-# ================================
+# ============================================
+# MITHIVOICES - GITIGNORE
+# ============================================
+
+# ============================================
+# PYTHON / BACKEND
+# ============================================
+
 # Virtual Environment
-# ================================
 venv/
+env/
+ENV/
+.venv/
+backend/venv/
+backend/.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# ============================================
+# NODE.JS / FRONTEND
+# ============================================
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+.cache/
+frontend/dist/
+frontend/build/
+
+# Vite
+.vite/
+frontend/.vite/
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
+
+# Environment files
 .env
 .env.local
 .env.production
+.env.development
+*.env
+backend/.env
+frontend/.env
+frontend/.env.local
 
-# ================================
-# Python Cache & Build Artifacts
-# ================================
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.log
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# Secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
 
-# ================================
-# OS / Editor Files
-# ================================
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-*.swp
+# ============================================
+# DATABASES & DATA
+# ============================================
 
-# ================================
-# Runtime Audio & Generated Media
-# ================================
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL
+*.sql
+*.dump
+
+# Data files
+data/
+*.csv
+*.json.bak
+
+# ============================================
+# AI MODELS & AUDIO FILES (CRITICAL - TOO LARGE)
+# ============================================
+
+# Generated audio (keep samples only)
 outputs/
-audio_responses/
+audio_output/
+backend/outputs/
+backend/audio_output/
 *.wav
 *.mp3
-*.m4a
-*.webm
+*.ogg
+!samples/*.wav
+!samples/*.mp3
 
-# ================================
-# AI Models (Heavy / Downloaded)
-# ================================
-models/**/*.onnx
-models/**/*.json
-models/**/*.bin
-models/**/*.pt
-models/**/*.pth
-models/**/*.ckpt
+# AI Models (570 MB - DO NOT COMMIT)
+models/
+*.onnx
+*.onnx.json
+*.bin
+*.pt
+*.pth
+whisper_models/
+backend/models/
+backend/piper_models/
+backend/voices/
+voices/
+*.voice
 
-# ================================
+# ============================================
+# LOGS & TEMPORARY FILES
+# ============================================
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pip-log.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ============================================
+# OPERATING SYSTEM
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+
+# ============================================
+# DESIGN & DEVELOPMENT ARTIFACTS (UNORGANIZED)
+# ============================================
+
+# Unorganized UI folders (DO NOT COMMIT)
+Mithivoice UI (dark mode)/
+Mithivoices UI/
+mobile essitional UI/
+some UI fixes/
+
+# Reference folders
+reference/
+refs/
+old/
+backup/
+archive/
+deprecated/
+
+# Large design source files
+*.psd
+*.sketch
+*.fig
+*.xd
+*.ai
+*.afdesign
+
+# Development notes
+notes/
+docs/drafts/
+TODO.md
+NOTES.md
+.scratch/
+
+# Test files
+test_data/
+*.test.local.ts
+*.test.local.tsx
+
+# ============================================
+# IDE & EDITOR
+# ============================================
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+!.vscode/settings.example.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# ============================================
+# MISCELLANEOUS
+# ============================================
+
+# Coverage reports
+coverage/
+*.coverage
+.nyc_output/
+htmlcov/
+
+# Docker
+*.dockerignore.local
+docker-compose.override.yml
+
+# Certificates
+*.crt
+*.cert
+ssl/
+
+# Large files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ============================================
+# PROJECT SPECIFIC
+# ============================================
+
+# Uploaded user files
+uploads/
+user_data/
+
+# Generated documentation
+docs/_build/
+site/
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+
+# Cloudflare
+.wrangler/
+
+# ============================================
+# KEEP THESE (Examples)
+# ============================================
+!.gitkeep
+!.env.example
+!.vscode/settings.example.json
+!samples/
 # Temporary / Experimental Scripts
 # ================================
 test_*.py
