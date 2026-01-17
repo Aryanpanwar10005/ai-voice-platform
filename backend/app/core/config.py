@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     # Models
     MODEL_DIR: str = "../voice_assets"
     
+    # LLM
+    GEMINI_API_KEY: str = ""
+    
     class Config:
         env_file = ".env"
 
