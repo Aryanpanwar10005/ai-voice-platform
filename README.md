@@ -1,11 +1,3 @@
-# ⚠️ Development Fork
-
-> **This is a personal development fork of Mithivoices.**  
-> **Official repository:** [github.com/mithivoices/ai-voice-platform](https://github.com/mithivoices/ai-voice-platform)  
-> **Please open issues and PRs on the official repo.**
-
----
-
 # Mithivoices
 
 ![CI/CD](https://github.com/mithivoices/ai-voice-platform/workflows/CI%2FCD%20Pipeline/badge.svg)
