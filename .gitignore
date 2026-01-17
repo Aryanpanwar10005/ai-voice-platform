@@ -323,3 +323,14 @@ docker-compose.override.yml
 # Supabase (future)
 # ================================
 .supabase/
+
+# Internal planning documents (do not commit)
+*Planning_Summary*
+*_CHECKLIST.md
+*.internal.md
+docs/internal/
+.github/internal/
+
+# Large PDFs (keep in Google Drive/Notion)
+*.pdf
+!docs/design/*.pdf
