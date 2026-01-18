@@ -106,7 +106,7 @@ export async function textToSpeech(params) {
  * @param {File|Blob} audioFile - Audio file to transcribe
  * @returns {{ text: string, language: string, confidence: number }}
  */
-export async function speechToText(audioFile, language = 'auto', customLanguage = null) {
+export async function speechToText(audioFile, _language = 'auto', _customLanguage = null) {
   const formData = new FormData();
   formData.append('file', audioFile); // Backend expects 'file'
   
@@ -174,7 +174,7 @@ export async function voiceChat(audioFile, voice_id = 'piper_en_us_lessac_medium
       try {
          const errorJson = JSON.parse(errorText);
          errorDetail = errorJson.detail || errorText;
-      } catch (e) {
+      } catch {
         // ignore
       }
       console.error('[API] Backend error:', response.status, errorDetail);

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import tailwindScrollbar from 'tailwind-scrollbar';
+
 const config = {
   darkMode: 'class',
   content: [
@@ -31,7 +33,7 @@ const config = {
     }
   },
   plugins: [
-    require('tailwind-scrollbar')({ nocompatible: true }),
+    tailwindScrollbar({ nocompatible: true }),
   ],
 }
 
