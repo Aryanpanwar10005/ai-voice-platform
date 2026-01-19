@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, Headphones, ArrowRight } from 'lucide-react';
 
 export default function ServerError() {
+  // Generate error ID once on mount using useState lazy initializer
+  const [errorId] = useState(() => Math.random().toString(36).substring(7));
+  
   return (
     <div className="min-h-screen w-full flex flex-col bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-white transition-colors duration-200">
       
@@ -40,7 +43,7 @@ export default function ServerError() {
                     <p className="text-slate-500 dark:text-slate-400 text-lg font-normal leading-normal">
                         We're experiencing technical difficulties. Please try again.
                     </p>
-                    <p className="text-slate-400 text-xs font-mono pt-1">Error ID: {Math.random().toString(36).substring(7)}</p>
+                    <p className="text-slate-400 text-xs font-mono pt-1">Error ID: {errorId}</p>
                 </div>
 
                 {/* Primary Action */}

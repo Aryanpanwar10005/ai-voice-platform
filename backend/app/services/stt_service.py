@@ -17,6 +17,9 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+# Maximum file size: 50MB - prevents DoS attacks from large uploads
+MAX_FILE_SIZE = 50 * 1024 * 1024
+
 class STTService:
     def __init__(self):
         self.model_size = "base"
@@ -43,6 +46,10 @@ class STTService:
         """
         Transcribes audio content.
         """
+        # Validate file size to prevent DoS attacks
+        if len(file_content) > MAX_FILE_SIZE:
+            raise ValueError(f"File too large. Maximum size: {MAX_FILE_SIZE // (1024*1024)}MB")
+        
         if not WHISPER_AVAILABLE:
             # Fallback/Mock for testing without Whisper installed
             logger.warning("Whisper not available, using mock transcription.")
